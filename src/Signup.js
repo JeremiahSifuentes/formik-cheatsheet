@@ -1,6 +1,6 @@
 // Import Formik
+import emailjs from '@emailjs/browser';
 import { useFormik } from 'formik';
-import React, {useState} from 'react';
 import * as Yup from 'yup'
 
 
@@ -13,6 +13,7 @@ export default function Signup() {
             lastName: "",
             email: ""
         },
+        // This schema is an object of rules that must be validated before a form can be submitted
         validationSchema: Yup.object({
             firstName: Yup.string()
             .max(15, "Must be 15 characters or less")
@@ -32,7 +33,19 @@ export default function Signup() {
     })
     console.log(formik.touched)
             // Add the onSubmit prop to the form so the logic from the method can work
-  return <form onSubmit={formik.handleSubmit}>
+
+
+  function sendEmail(e) {
+    e.preventDefault();
+
+    emailjs.sendForm('service_7qza52y', 'template_5ia0xld', e.target, "user_ZXKanyCsilHeaQN4zWCdm")
+    .then(res=>{
+      console.log(res)
+    }).catch(err=> console.log(err));
+  }
+
+
+  return <form onSubmit={formik.handleSubmit && sendEmail}>
       <div className='input-container'>
           <input 
             id="firstName"
